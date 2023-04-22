@@ -1,4 +1,4 @@
-package logs
+package loggo
 
 import "context"
 
