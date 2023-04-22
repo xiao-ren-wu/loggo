@@ -1,1 +1,1 @@
-# loggo
+# logs
