@@ -1,20 +1,21 @@
-package loggo
+package logger
 
 import (
 	"context"
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"github.com/xiao-ren-wu/loggo/api"
 	"runtime"
 	"time"
 )
 
-type Loggers struct {
-	*config
+type LoggoImpl struct {
+	*Config
 	log *logrus.Logger
 }
 
-func NewLogger(ops ...OpsFunc) (*Loggers, error) {
-	conf := config{
+func NewLoggo(ops ...OpsFunc) (api.Loggo, error) {
+	conf := Config{
 		reportCaller: false,
 		timeFormat:   time.RFC3339,
 		consoleColor: true,
@@ -27,7 +28,7 @@ func NewLogger(ops ...OpsFunc) (*Loggers, error) {
 	}
 	logger := logrus.New()
 	if conf.parseCtxFunc != nil {
-		logger.AddHook(&ctxHook{
+		logger.AddHook(&CtxHook{
 			parseCtxFunc: conf.parseCtxFunc,
 		})
 	}
@@ -55,115 +56,115 @@ func NewLogger(ops ...OpsFunc) (*Loggers, error) {
 		logger.SetLevel(conf.level)
 	}
 
-	return &Loggers{
-		config: &conf,
+	return &LoggoImpl{
+		Config: &conf,
 		log:    logger,
 	}, nil
 }
 
-func (l *Loggers) CtxFatal(ctx context.Context, format string, v ...interface{}) {
+func (l *LoggoImpl) CtxFatal(ctx context.Context, format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Fatalf(format, v...)
 }
 
-func (l *Loggers) CtxError(ctx context.Context, format string, v ...interface{}) {
+func (l *LoggoImpl) CtxError(ctx context.Context, format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Errorf(format, v...)
 }
 
-func (l *Loggers) CtxWarn(ctx context.Context, format string, v ...interface{}) {
+func (l *LoggoImpl) CtxWarn(ctx context.Context, format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Warnf(format, v...)
 }
 
-func (l *Loggers) CtxInfo(ctx context.Context, format string, v ...interface{}) {
+func (l *LoggoImpl) CtxInfo(ctx context.Context, format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Infof(format, v...)
 }
 
-func (l *Loggers) CtxDebug(ctx context.Context, format string, v ...interface{}) {
+func (l *LoggoImpl) CtxDebug(ctx context.Context, format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Debugf(format, v...)
 }
 
-func (l *Loggers) CtxTrace(ctx context.Context, format string, v ...interface{}) {
+func (l *LoggoImpl) CtxTrace(ctx context.Context, format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Tracef(format, v...)
 }
 
-func (l *Loggers) Fatal(format string, v ...interface{}) {
+func (l *LoggoImpl) Fatal(format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Fatalf(format, v...)
 }
 
-func (l *Loggers) Error(format string, v ...interface{}) {
+func (l *LoggoImpl) Error(format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Errorf(format, v...)
 }
 
-func (l *Loggers) Warn(format string, v ...interface{}) {
+func (l *LoggoImpl) Warn(format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Warnf(format, v...)
 }
 
-func (l *Loggers) Info(format string, v ...interface{}) {
+func (l *LoggoImpl) Info(format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Infof(format, v...)
 }
 
-func (l *Loggers) Debug(format string, v ...interface{}) {
+func (l *LoggoImpl) Debug(format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Debugf(format, v...)
 }
 
-func (l *Loggers) Trace(format string, v ...interface{}) {
+func (l *LoggoImpl) Trace(format string, v ...interface{}) {
 	var log logrus.Ext1FieldLogger = l.log
 	if l.reportCaller {
-		_, file, line, _ := runtime.Caller(1)
+		_, file, line, _ := runtime.Caller(l.skipPoint)
 		log = log.WithField("position", fmt.Sprintf("%s.%d", file, line))
 	}
 	log.Tracef(format, v...)

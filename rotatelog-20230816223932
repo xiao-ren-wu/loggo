@@ -1,0 +1,1 @@
+time="2023-08-16T22:39:32+08:00" level=info msg="hello world" caller=test.service logID=123545 position=/Users/yuwenbo/GolandProjects/loggo/log_test.go.63 traceID=2023

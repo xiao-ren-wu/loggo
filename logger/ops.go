@@ -1,12 +1,13 @@
-package loggo
+package logger
 
 import (
 	"context"
 	"github.com/sirupsen/logrus"
 )
 
-type config struct {
+type Config struct {
 	reportCaller     bool
+	skipPoint        int
 	timeFormat       string
 	consoleColor     bool
 	parseCtxFunc     func(ctx context.Context) map[string]interface{}
@@ -15,23 +16,28 @@ type config struct {
 	rotateLogsConfig *RotateLogsConfig
 }
 
-type OpsFunc func(cfg *config)
+type OpsFunc func(cfg *Config)
 
 func WithCtxValue(f func(ctx context.Context) map[string]interface{}) OpsFunc {
-	return func(cfg *config) {
+	return func(cfg *Config) {
 		cfg.parseCtxFunc = f
 	}
 }
 
 func WithDisableColor() OpsFunc {
-	return func(cfg *config) {
+	return func(cfg *Config) {
 		cfg.consoleColor = false
 	}
 }
 
-func WithReportCaller() OpsFunc {
-	return func(cfg *config) {
+func WithReportCaller(skipPoint ...int) OpsFunc {
+	var skp = 1
+	if len(skipPoint) > 0 {
+		skp = skipPoint[0]
+	}
+	return func(cfg *Config) {
 		cfg.reportCaller = true
+		cfg.skipPoint = skp
 	}
 }
 
@@ -60,14 +66,14 @@ const (
 )
 
 func WithLevel(level Level) OpsFunc {
-	return func(cfg *config) {
+	return func(cfg *Config) {
 		cfg.setLevel = true
 		cfg.level = logrus.Level(level)
 	}
 }
 
 func WithRotateLogs(conf *RotateLogsConfig) OpsFunc {
-	return func(cfg *config) {
+	return func(cfg *Config) {
 		cfg.rotateLogsConfig = conf
 	}
 }

@@ -1,4 +1,4 @@
-package loggo
+package logger
 
 import "github.com/sirupsen/logrus"
 

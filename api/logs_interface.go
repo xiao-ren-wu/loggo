@@ -1,6 +1,11 @@
-package loggo
+package api
 
 import "context"
+
+type Loggo interface {
+	CtxLoggerInterface
+	LoggerInterface
+}
 
 type CtxLoggerInterface interface {
 	CtxFatal(ctx context.Context, format string, v ...interface{})
