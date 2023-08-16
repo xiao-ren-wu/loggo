@@ -37,28 +37,13 @@ func TestWithCtxVal(t *testing.T) {
 }
 
 func TestLoggo(t *testing.T) {
-	log, err := logger.NewLoggo(
-		logger.WithCtxValue(func(ctx context.Context) map[string]interface{} {
-			return map[string]interface{}{
-				"logID":   ctx.Value("logID"),
-				"traceID": ctx.Value("traceID"),
-				"caller":  ctx.Value("caller"),
-			}
-		}),
-		logger.WithRotateLogs(&logger.RotateLogsConfig{
-			LogFilePrefix: "rotatelog",
-			//RotationSize:  10,
-			RotationCount: 1024,
-			RotationTime:  0,
-			MaxAge:        0,
-		}),
-		logger.WithReportCaller(2))
-	if err != nil {
-		t.Fatal(err)
-	}
+	//log, err := logger.NewLoggo()
+	//if err != nil {
+	//	t.Fatal(err)
+	//}
 	ctx := context.WithValue(context.Background(), "logID", "123545")
 	ctx = context.WithValue(ctx, "traceID", "2023")
 	ctx = context.WithValue(ctx, "caller", "test.service")
-	loggo.SetLoggo(log)
+	//loggo.SetLoggo(log)
 	loggo.CtxInfo(ctx, "hello world")
 }

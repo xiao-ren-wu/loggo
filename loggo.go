@@ -3,9 +3,14 @@ package loggo
 import (
 	"context"
 	"github.com/xiao-ren-wu/loggo/api"
+	"github.com/xiao-ren-wu/loggo/logger"
 )
 
 var loggo api.Loggo
+
+func init() {
+	loggo, _ = logger.NewLoggo()
+}
 
 func SetLoggo(log api.Loggo) {
 	loggo = log
