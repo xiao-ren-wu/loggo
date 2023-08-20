@@ -53,3 +53,22 @@ func Debug(format string, v ...interface{}) {
 func Trace(format string, v ...interface{}) {
 	loggo.Trace(format, v...)
 }
+
+func CtxflFatal(ctx context.Context, location string, format string, v ...interface{}) {
+	loggo.CtxflFatal(ctx, location, format, v...)
+}
+func CtxErrorl(ctx context.Context, location string, format string, v ...interface{}) {
+	loggo.CtxErrorl(ctx, location, format, v...)
+}
+func CtxWarnl(ctx context.Context, location string, format string, v ...interface{}) {
+	loggo.CtxWarnl(ctx, location, format, v...)
+}
+func CtxInfol(ctx context.Context, location string, format string, v ...interface{}) {
+	loggo.CtxInfol(ctx, location, format, v...)
+}
+func CtxDebugl(ctx context.Context, location string, format string, v ...interface{}) {
+	loggo.CtxDebugl(ctx, location, format, v...)
+}
+func CtxTracel(ctx context.Context, location string, format string, v ...interface{}) {
+	loggo.CtxTracel(ctx, location, format, v...)
+}

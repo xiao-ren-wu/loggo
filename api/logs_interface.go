@@ -5,6 +5,7 @@ import "context"
 type Loggo interface {
 	CtxLoggerInterface
 	LoggerInterface
+	CtxLocationLoggerInterface
 }
 
 type CtxLoggerInterface interface {
@@ -23,4 +24,13 @@ type LoggerInterface interface {
 	Info(format string, v ...interface{})
 	Debug(format string, v ...interface{})
 	Trace(format string, v ...interface{})
+}
+
+type CtxLocationLoggerInterface interface {
+	CtxflFatal(ctx context.Context, location string, format string, v ...interface{})
+	CtxErrorl(ctx context.Context, location string, format string, v ...interface{})
+	CtxWarnl(ctx context.Context, location string, format string, v ...interface{})
+	CtxInfol(ctx context.Context, location string, format string, v ...interface{})
+	CtxDebugl(ctx context.Context, location string, format string, v ...interface{})
+	CtxTracel(ctx context.Context, location string, format string, v ...interface{})
 }

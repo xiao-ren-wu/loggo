@@ -46,4 +46,5 @@ func TestLoggo(t *testing.T) {
 	ctx = context.WithValue(ctx, "caller", "test.service")
 	//loggo.SetLoggo(log)
 	loggo.CtxInfo(ctx, "hello world")
+	loggo.CtxInfol(ctx, "lo", "helloworld")
 }

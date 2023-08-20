@@ -169,3 +169,39 @@ func (l *LoggoImpl) Trace(format string, v ...interface{}) {
 	}
 	log.Tracef(format, v...)
 }
+
+func (l *LoggoImpl) CtxflFatal(ctx context.Context, location string, format string, v ...interface{}) {
+	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
+	log = log.WithField("position", location)
+	log.Fatalf(format, v...)
+}
+
+func (l *LoggoImpl) CtxErrorl(ctx context.Context, location string, format string, v ...interface{}) {
+	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
+	log = log.WithField("position", location)
+	log.Errorf(format, v...)
+}
+
+func (l *LoggoImpl) CtxWarnl(ctx context.Context, location string, format string, v ...interface{}) {
+	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
+	log = log.WithField("position", location)
+	log.Warnf(format, v...)
+}
+
+func (l *LoggoImpl) CtxInfol(ctx context.Context, location string, format string, v ...interface{}) {
+	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
+	log = log.WithField("position", location)
+	log.Infof(format, v...)
+}
+
+func (l *LoggoImpl) CtxDebugl(ctx context.Context, location string, format string, v ...interface{}) {
+	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
+	log = log.WithField("position", location)
+	log.Debugf(format, v...)
+}
+
+func (l *LoggoImpl) CtxTracel(ctx context.Context, location string, format string, v ...interface{}) {
+	var log logrus.Ext1FieldLogger = l.log.WithContext(ctx)
+	log = log.WithField("position", location)
+	log.Tracef(format, v...)
+}
